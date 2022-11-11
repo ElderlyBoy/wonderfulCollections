@@ -15,7 +15,7 @@
   <body style="display: none;">
     <div id="app">
       <div class="container">
-        <div class="item" v-for="item in 100" :key="item">
+        <div class="item" v-for="(item, index) in imageList" :key="index">
           <img @load="imgLoaded" :src="getMockImagesURL()" alt="mock images">
         </div>
       </div>
@@ -26,31 +26,37 @@
       const { createApp, ref, onMounted, shallowRef } = Vue;
       createApp({
         setup(){
+          let masonry;
           onMounted(() => {
             document.body.setAttribute('style', '');
-            masonry();
-          })
-
-          function masonry(){
-            return new Masonry( '.container', {
+            masonry = new Masonry( '.container', {
               itemSelector: '.item',
               columnWidth: '.container .item',
               percentPosition: true
             });
-          }
-          
+          })
+          //generate mock image-url
           function getMockImagesURL() {
             let arr = [200,250,300,350,400,450]
             const width = arr[Math.ceil(Math.random()*10)%6];
             const height = arr[Math.ceil(Math.random()*10)%6];
             return `https://picsum.photos/${width}/${height}`;
           }
+          //after each image is loaded,you need to `re-masonry` the container for best experience.
           function imgLoaded(e){
-            masonry()
+            masonry.layout()
           }
+          //load 2 images per 5 sec. to show how it works.
+          const imageList = ref(Array.from({length: 5}));
+          setInterval(() => {
+            imageList.value.push(...Array.from({length: 2}))
+            masonry.reloadItems(); //see reloadItems in https://masonry.desandro.com/methods.html
+          }, 5000)
+          //last edited by Mr.x <admin@shiniest.cn> in 2022.11.11
           return {
             getMockImagesURL,
-            imgLoaded
+            imgLoaded,
+            imageList
           }
         }
       }).mount('#app')
