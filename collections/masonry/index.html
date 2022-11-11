@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Masonry</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      .container { max-width: 1200px; margin: auto; }
+      .container .item { width: 33%; }
+      .container .item img { width: 100%; display: block; }
+    </style>
+  </head>
+  <body style="display: none;">
+    <div id="app">
+      <div class="container">
+        <div class="item" v-for="item in 100" :key="item">
+          <img @load="imgLoaded" :src="getMockImagesURL()" alt="mock images">
+        </div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp, ref, onMounted, shallowRef } = Vue;
+      createApp({
+        setup(){
+          onMounted(() => {
+            document.body.setAttribute('style', '');
+            masonry();
+          })
+
+          function masonry(){
+            return new Masonry( '.container', {
+              itemSelector: '.item',
+              columnWidth: '.container .item',
+              percentPosition: true
+            });
+          }
+          
+          function getMockImagesURL() {
+            let arr = [200,250,300,350,400,450]
+            const width = arr[Math.ceil(Math.random()*10)%6];
+            const height = arr[Math.ceil(Math.random()*10)%6];
+            return `https://picsum.photos/${width}/${height}`;
+          }
+          function imgLoaded(e){
+            masonry()
+          }
+          return {
+            getMockImagesURL,
+            imgLoaded
+          }
+        }
+      }).mount('#app')
+    </script>
+  </body>
+</html>
