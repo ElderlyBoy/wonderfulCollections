@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swiper</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+    <style>
+      .swiper { width: 600px; height: 300px; }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          <img v-for="item in 10" class="swiper-slide" :src="`https://picsum.photos/600/300?state=${Math.random()}`" />
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp, onMounted } = Vue;
+      createApp({
+        setup() {
+          onMounted(() => {
+            const swiper = new Swiper('.swiper', {
+              loop: true,
+              pagination: {
+                el: '.swiper-pagination',
+              },
+            });
+          });
+        },
+      }).mount('#app');
+    </script>
+  </body>
+</html>
